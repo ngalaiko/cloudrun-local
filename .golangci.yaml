@@ -1,0 +1,94 @@
+version: "2"
+linters:
+  enable:
+    - bidichk
+    - govet
+    - gosec
+    - misspell
+    - revive
+    - sloglint
+  settings:
+    sloglint:
+      context: "all"
+    misspell:
+      locale: UK
+      # Should be in lower case.
+      # Default: []
+      # ignore-rules:
+      #   - someword
+      mode: restricted
+    govet:
+      enable:
+        - asmdecl
+        - assign
+        - atomic
+        - bools
+        - buildtag
+        - cgocall
+        - copylocks
+        - deepequalerrors
+        - errorsas
+        - framepointer
+        - httpresponse
+        - ifaceassert
+        - loopclosure
+        - lostcancel
+        - nilfunc
+        - nilness
+        - printf
+        - reflectvaluecompare
+        - shift
+        - sigchanyzer
+        - sortslice
+        - stdmethods
+        - stringintconv
+        - structtag
+        - testinggoroutine
+        - tests
+        - unmarshal
+        - unreachable
+        - unsafeptr
+        - unusedresult
+    revive:
+      enable-all-rules: false
+      rules:
+        - name: atomic
+        - name: context-keys-type
+        - name: defer
+          arguments:
+            - - immediate-recover
+              - recover
+              - return
+        - name: duplicated-imports
+        - name: errorf
+        - name: string-of-int
+        - name: time-equal
+        - name: unconditional-recursion
+        - name: useless-break
+        - name: waitgroup-by-value
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gci
+    - goimports
+  settings:
+    gofmt:
+      rewrite-rules:
+        - pattern: interface{}
+          replacement: any
+    gci:
+      sections:
+        - standard
+        - blank
+        - prefix(github.com/ngalaiko/cloudrun-local)
+        - default
