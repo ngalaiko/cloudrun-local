@@ -96,7 +96,10 @@ func run() error {
 	// Execute command with environment
 	//nolint:gosec // looks insecure, but that's kind of the point
 	cmd := exec.CommandContext(ctx, command[0], command[1:]...)
-	cmd.Env = append(os.Environ(), envVars...)
+
+	// Inherit existing environment variables
+	cmd.Env = append(envVars, os.Environ()...)
+
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -145,6 +148,11 @@ DESCRIPTION:
     - Authenticated gcloud CLI (gcloud auth application-default login)
     - Permissions to impersonate the service account
     - Access to secrets referenced in the configuration
+
+    Environment variables are resolved with the following priority (highest first):
+    1. Current shell environment (allows overriding config values)
+    2. Cloud Run configuration YAML
+    3. Automatic variables (K_SERVICE, K_REVISION, etc.)
 
 CONFIGURATION:
     The service account is read from: spec.template.spec.serviceAccountName

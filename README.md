@@ -125,6 +125,25 @@ The following variables are automatically set:
 4. Resolve all environment variables
 5. Print variables or execute command with environment
 
+## Environment Variable Priority
+
+Environment variables are resolved in the following priority order (highest to lowest):
+
+1. **Current shell environment** - Variables from your current shell session
+2. **Cloud Run configuration** - Variables defined in the YAML config file
+3. **Automatic variables** - System-set variables (K_SERVICE, K_REVISION, etc.)
+
+This means you can override any variable from the config by setting it in your shell:
+
+```bash
+# Override DATABASE_URL from config
+export DATABASE_URL="postgres://localhost:5433/testdb"
+cloudrun-local -c service.yaml -- go run ./cmd/server
+
+# Override secrets temporarily
+API_KEY=test-key cloudrun-local -c service.yaml -- npm test
+```
+
 ## Examples
 
 Run a Go service:
