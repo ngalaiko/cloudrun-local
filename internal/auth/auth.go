@@ -72,12 +72,16 @@ func getGcloudConfigDir() (string, error) {
 
 // applicationDefaultCredentials reads the local application default credentials
 func applicationDefaultCredentials() (string, error) {
-	configDir, err := getGcloudConfigDir()
-	if err != nil {
-		return "", err
-	}
+	// Check GOOGLE_APPLICATION_CREDENTIALS first, matching the behavior of google.FindDefaultCredentials
+	path := os.Getenv("GOOGLE_APPLICATION_CREDENTIALS")
 
-	path := filepath.Join(configDir, "application_default_credentials.json")
+	if path == "" {
+		configDir, err := getGcloudConfigDir()
+		if err != nil {
+			return "", err
+		}
+		path = filepath.Join(configDir, "application_default_credentials.json")
+	}
 
 	b, err := os.ReadFile(path)
 	if err != nil {
